@@ -635,7 +635,7 @@
     },
     "wallpaper": {
         "automationEnabled": false,
-        "directory": "/home/argoneus/Pictures/Wallpapers",
+        "directory": "/home/argo/Pictures/Wallpapers",
         "enableMultiMonitorDirectories": false,
         "enabled": true,
         "favorites": [
