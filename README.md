@@ -5,6 +5,10 @@
 - Font: Hack Nerd Font
 - Cursor: Bibata-Modern-Ice, 24px (use `hyprcursor-util` to convert to `Bibata-Modern-Ice-hypr`, both are needed)
 
+### Fedora
+
+- Install `default-fonts-core` and `default-fonts-cjk`
+
 ## Installation
 
 - `chezmoi init`
