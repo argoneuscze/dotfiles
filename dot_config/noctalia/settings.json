@@ -553,21 +553,21 @@
             },
             {
                 "action": "reboot",
-                "command": "",
+                "command": "hyprshutdown -t \"Rebooting...\" --post-cmd \"reboot\"",
                 "countdownEnabled": true,
                 "enabled": true,
                 "keybind": "4"
             },
             {
                 "action": "logout",
-                "command": "",
+                "command": "hyprshutdown -t \"Logging out...\"",
                 "countdownEnabled": true,
                 "enabled": true,
                 "keybind": "5"
             },
             {
                 "action": "shutdown",
-                "command": "",
+                "command": "hyprshutdown -t \"Shutting down...\" --post-cmd \"shutdown -P 0\"",
                 "countdownEnabled": true,
                 "enabled": true,
                 "keybind": "6"
@@ -576,8 +576,8 @@
                 "action": "rebootToUefi",
                 "command": "",
                 "countdownEnabled": true,
-                "enabled": true,
-                "keybind": "7"
+                "enabled": false,
+                "keybind": ""
             },
             {
                 "action": "userspaceReboot",
