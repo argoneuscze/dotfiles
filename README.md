@@ -3,11 +3,12 @@
 ## Notes
 
 - Font: Hack Nerd Font
-- Cursor: Bibata-Modern-Ice, 24px (use `hyprcursor-util` to convert to `Bibata-Modern-Ice-hypr`, both are needed)
+- Cursor: Bibata-Modern-Ice, 24px
 
 ### Fedora
 
-- Install `default-fonts-core` and `default-fonts-cjk`
+- sudo dnf install `default-fonts-core default-fonts-cjk unifont-fonts rsms-inter-fonts adobe-source-serif-pro-fonts`
+- Nerd font and cursor need to be installed manually, cursor needs to be converted to hyprcursor via `hyprcursor-util`
 
 ## Installation
 
