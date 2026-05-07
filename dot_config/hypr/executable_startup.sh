@@ -13,7 +13,7 @@ sleep 3 # delay so tray works as expected
 hyprctl dispatch exec "[workspace 3 silent] ghostty"
 hyprctl dispatch workspace 1
 brave-browser &
-flatpak run com.discordapp.Discord &
-sleep 8 # delay due to Discord integration
+Discord &
+sleep 7 # Delay because of Discord integration
 flatpak run app.ytmdesktop.ytmdesktop &
 
