@@ -2,7 +2,7 @@
 
 ## Notes
 
-- Font: Hack Nerd Font
+- Fonts: Hack Nerd Font Mono, Noto Sans, Noto Serif
 - Cursor: Bibata-Modern-Ice, 24px
 
 ### Fedora
