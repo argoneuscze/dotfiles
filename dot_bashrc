@@ -24,6 +24,9 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+# Rust
+. "$HOME/.cargo/env"
+
 # starship
 eval "$(starship init bash)"
 
