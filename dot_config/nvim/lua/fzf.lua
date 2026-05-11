@@ -10,6 +10,7 @@ U.nmap('<leader>fc', fzf.commands, 'Commands')
 U.nmap('<leader>fh', fzf.help_tags, 'Help tags')
 U.nmap('<leader>fk', fzf.keymaps, 'Keymaps')
 U.nmap('<leader>fz', fzf.spell_suggest, 'Spelling suggestions')
+U.nmap('<leader>fu', fzf.undotree, 'Undotree')
 U.nmap('<leader>fq', fzf.quickfix, 'Quickfix list')
 U.nmap('<leader>f/', fzf.search_history, 'Search history')
 

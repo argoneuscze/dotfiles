@@ -1,4 +1,5 @@
 -- Server configuration
+local tools = {}
 local servers = {
   stylua = {},
   lua_ls = {
@@ -31,34 +32,28 @@ local servers = {
       },
     },
   },
-  gopls = {
-    on_attach = function(client, bufnr)
-      local group = vim.api.nvim_create_augroup('GoFormat_' .. bufnr, { clear = true })
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        group = group,
-        buffer = bufnr,
-        callback = function()
-          local range_params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), client.offset_encoding)
-          local params = {
-            textDocument = range_params.textDocument,
-            range = range_params.range,
-            context = {
-              only = { 'source.organizeImports' },
-            },
-          }
-          local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, 3000)
-          for cid, res in pairs(result or {}) do
-            for _, r in pairs(res.result or {}) do
-              if r.edit then
-                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
-                vim.lsp.util.apply_workspace_edit(r.edit, enc)
-              end
-            end
-          end
-          vim.lsp.buf.format { async = false, id = client.id }
-        end,
-      })
-    end,
+  ruff = {
+    -- Let pyright handle hover
+    on_attach = function(client, _) client.server_capabilities.hoverProvider = false end,
+  },
+  basedpyright = {
+    settings = {
+      pyright = {
+        -- Using Ruff's import organizer
+        disableOrganizeImports = true,
+      },
+      python = {
+        analysis = {
+          -- Ignore all files for analysis to exclusively use Ruff for linting
+          ignore = { '*' },
+        },
+      },
+    },
+  },
+}
+
+if vim.fn.executable 'go' == 1 then
+  servers.gopls = {
     settings = {
       gopls = {
         analyses = {
@@ -68,8 +63,9 @@ local servers = {
         gofumpt = true,
       },
     },
-  },
-}
+  }
+  vim.list_extend(tools, { 'goimports', 'gofumpt' })
+end
 
 -- LSP hook
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -83,6 +79,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- LSP bindings
     map('<leader>cr', vim.lsp.buf.rename, 'LSP Rename')
     map('<leader>ca', vim.lsp.buf.code_action, 'LSP Code actions', { 'n', 'x' })
+    map('<C-s>', vim.lsp.buf.hover, 'LSP Hover', { 'n' })
 
     -- Highlight references under cursor
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -132,8 +129,10 @@ vim.pack.add {
 require('mason').setup {}
 
 local ensure_installed = vim.tbl_keys(servers or {})
+vim.list_extend(ensure_installed, tools)
 vim.list_extend(ensure_installed, {
   -- Extras
+  'rust-analyzer',
 })
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -188,7 +187,9 @@ require('conform').setup {
     lsp_format = 'fallback',
   },
   formatters_by_ft = {
-    javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    --javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    python = { 'ruff_organize_imports', 'ruff_format' },
+    go = { 'goimports', 'gofumpt' },
   },
 }
 
