@@ -62,7 +62,7 @@ vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move up"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move down"<CR>')
 
 -- black hole register
-vim.keymap.set('n', "'", '"_', { noremap = true, silent = true, desc = 'Use black hole register' })
+vim.keymap.set({ 'n', 'x' }, '<leader>d', '"_d', { desc = 'Delete without register' })
 
 -- diagnostic
 vim.diagnostic.config {

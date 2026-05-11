@@ -31,6 +31,44 @@ local servers = {
       },
     },
   },
+  gopls = {
+    on_attach = function(client, bufnr)
+      local group = vim.api.nvim_create_augroup('GoFormat_' .. bufnr, { clear = true })
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = group,
+        buffer = bufnr,
+        callback = function()
+          local range_params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), client.offset_encoding)
+          local params = {
+            textDocument = range_params.textDocument,
+            range = range_params.range,
+            context = {
+              only = { 'source.organizeImports' },
+            },
+          }
+          local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, 3000)
+          for cid, res in pairs(result or {}) do
+            for _, r in pairs(res.result or {}) do
+              if r.edit then
+                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
+                vim.lsp.util.apply_workspace_edit(r.edit, enc)
+              end
+            end
+          end
+          vim.lsp.buf.format { async = false, id = client.id }
+        end,
+      })
+    end,
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+        gofumpt = true,
+      },
+    },
+  },
 }
 
 -- LSP hook
@@ -39,11 +77,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(event)
     local map = function(keys, func, desc, mode)
       mode = mode or 'n'
-      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
     end
 
     -- LSP bindings
-    map('<leader>rn', vim.lsp.buf.rename, 'LSP Rename')
+    map('<leader>cr', vim.lsp.buf.rename, 'LSP Rename')
     map('<leader>ca', vim.lsp.buf.code_action, 'LSP Code actions', { 'n', 'x' })
 
     -- Highlight references under cursor
@@ -73,7 +111,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Toggle inlay hints
     if client and client:supports_method('textDocument/inlayHint', event.buf) then
-      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+      vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+      map(
+        '<leader>th',
+        function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, { bufnr = event.buf }) end,
+        'LSP Inlay hints'
+      )
     end
   end,
 })
@@ -99,6 +142,9 @@ for name, server in pairs(servers) do
   vim.lsp.config(name, server)
   vim.lsp.enable(name)
 end
+
+-- Snippets
+vim.pack.add { U.gh 'rafamadriz/friendly-snippets' }
 
 -- Autocompletion
 vim.pack.add { { src = U.gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
@@ -143,5 +189,13 @@ require('conform').setup {
   },
   formatters_by_ft = {
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
+  },
+}
+
+-- Rust
+vim.pack.add {
+  {
+    src = 'https://github.com/mrcjkb/rustaceanvim',
+    version = vim.version.range '^9',
   },
 }

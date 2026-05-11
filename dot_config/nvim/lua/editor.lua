@@ -46,6 +46,7 @@ require('which-key').setup {
   spec = {
     { '<leader>f', group = 'Find', mode = { 'n', 'v' } },
     { '<leader>t', group = 'Toggle' },
+    { '<leader>c', group = 'LSP Actions' },
     { '<leader>g', group = 'Git', mode = { 'n' } },
   },
 }
