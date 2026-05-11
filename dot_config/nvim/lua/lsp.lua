@@ -59,6 +59,16 @@ if vim.fn.executable 'go' == 1 then
         analyses = {
           unusedparams = true,
         },
+        hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          functionTypeParameters = true,
+          ignoredError = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+        },
         staticcheck = true,
         gofumpt = true,
       },
@@ -108,7 +118,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Toggle inlay hints
     if client and client:supports_method('textDocument/inlayHint', event.buf) then
-      vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
       map(
         '<leader>th',
         function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, { bufnr = event.buf }) end,
