@@ -7,7 +7,6 @@ vim.cmd.colorscheme 'dracula'
 
 -- status line
 vim.pack.add {
-  U.gh 'nvim-tree/nvim-web-devicons',
   U.gh 'nvim-lualine/lualine.nvim',
 }
 require('lualine').setup {
@@ -25,9 +24,18 @@ require('lualine').setup {
 vim.pack.add { U.gh 'NMAC427/guess-indent.nvim' }
 require('guess-indent').setup {}
 
+-- indent guides
+vim.pack.add { 'https://github.com/lukas-reineke/indent-blankline.nvim' }
+require('ibl').setup {}
+
 -- git signs
 vim.pack.add { U.gh 'lewis6991/gitsigns.nvim' }
 require('gitsigns').setup {}
+
+-- todo comments
+vim.pack.add { U.gh 'folke/todo-comments.nvim' }
+require('todo-comments').setup {}
+vim.keymap.set('n', '<leader>ft', '<cmd>TodoFzfLua<CR>', { desc = 'TODOs and notes' })
 
 -- show keybinds
 vim.pack.add { U.gh 'folke/which-key.nvim' }
@@ -59,3 +67,21 @@ require('tiny-inline-diagnostic').setup {
     enable_on_insert = true,
   },
 }
+
+-- oil
+function _G.get_oil_winbar()
+  local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+  local dir = require('oil').get_current_dir(bufnr)
+  if dir then
+    return vim.fn.fnamemodify(dir, ':~')
+  else
+    return vim.api.nvim_buf_get_name(0)
+  end
+end
+vim.pack.add { U.gh 'stevearc/oil.nvim' }
+require('oil').setup {
+  win_options = {
+    winbar = '%!v:lua.get_oil_winbar()',
+  },
+}
+vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open parent directory' })
