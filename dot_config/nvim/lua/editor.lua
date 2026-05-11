@@ -7,8 +7,8 @@ vim.cmd.colorscheme 'dracula'
 
 -- status line
 vim.pack.add {
-  'https://github.com/nvim-tree/nvim-web-devicons',
-  'https://github.com/nvim-lualine/lualine.nvim',
+  U.gh 'nvim-tree/nvim-web-devicons',
+  U.gh 'nvim-lualine/lualine.nvim',
 }
 require('lualine').setup {
   sections = {
@@ -47,7 +47,7 @@ vim.pack.add { U.gh 'j-hui/fidget.nvim' }
 require('fidget').setup {}
 
 -- diagnostic plugin
-vim.pack.add { 'rachartier/tiny-inline-diagnostic.nvim' }
+vim.pack.add { U.gh 'rachartier/tiny-inline-diagnostic.nvim' }
 require('tiny-inline-diagnostic').setup {
   options = {
     show_source = {
