@@ -1,5 +1,5 @@
 -- Server configuration
-local tools = {}
+local tools = { 'rust-analyzer' }
 local servers = {
   stylua = {},
   lua_ls = {
@@ -139,10 +139,6 @@ require('mason').setup {}
 
 local ensure_installed = vim.tbl_keys(servers or {})
 vim.list_extend(ensure_installed, tools)
-vim.list_extend(ensure_installed, {
-  -- Extras
-  'rust-analyzer',
-})
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
