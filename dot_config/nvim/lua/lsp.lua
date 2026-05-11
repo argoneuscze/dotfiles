@@ -1,5 +1,5 @@
 -- Server configuration
-local tools = { 'rust-analyzer' }
+local tools = { 'rust-analyzer', 'prettierd' }
 local servers = {
   stylua = {},
   lua_ls = {
@@ -185,14 +185,14 @@ vim.pack.add { U.gh 'stevearc/conform.nvim' }
 require('conform').setup {
   notify_on_error = false,
   format_on_save = {
-    timeout_ms = 500,
+    timeout_ms = 1500,
     lsp_format = 'fallback',
   },
   default_format_opts = {
     lsp_format = 'fallback',
   },
   formatters_by_ft = {
-    --javascript = { 'prettierd', 'prettier', stop_after_first = true },
+    javascript = { 'prettierd', 'prettier', stop_after_first = true },
     python = { 'ruff_organize_imports', 'ruff_format' },
     go = { 'goimports', 'gofumpt' },
   },
