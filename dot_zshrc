@@ -1,0 +1,48 @@
+# Rust
+. "$HOME/.cargo/env"
+
+# starship
+eval "$(starship init zsh)"
+
+# aliases
+alias vi=nvim
+alias vim=nvim
+
+# systemd
+alias sc="systemctl"
+alias scu="systemctl --user"
+alias scureload="systemctl --user daemon-reload"
+
+alias jc="journalctl -f -u"
+alias jcu="journalctl --user -f -u"
+
+# podman
+alias pm="podman"
+alias pmq="podman quadlet"
+
+# Fix HOME/END/DEL keys
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+bindkey "^[[3~" delete-char
+
+# Zsh settings
+autoload -Uz compinit && compinit
+
+setopt correct
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt extended_history
+setopt append_history
+setopt share_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+
+# Use fzf if supported
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
+
