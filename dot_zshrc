@@ -1,9 +1,3 @@
-# Rust
-. "$HOME/.cargo/env"
-
-# starship
-eval "$(starship init zsh)"
-
 # aliases
 alias vi=nvim
 alias vim=nvim
@@ -26,6 +20,12 @@ alias pmq="podman quadlet"
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 bindkey "^[[3~" delete-char
+#
+# Rust
+. "$HOME/.cargo/env"
+
+# starship
+eval "$(starship init zsh)"
 
 # Zsh settings
 autoload -Uz compinit && compinit
@@ -36,7 +36,7 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt extended_history
-setopt append_history
+setopt inc_append_history
 setopt share_history
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
