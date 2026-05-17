@@ -15,7 +15,7 @@ alias scureload="systemctl --user daemon-reload"
 alias jc="journalctl -u"
 alias jcf="journalctl -f -u"
 alias jcu="journalctl --user -u"
-alias jcfu="journalctl --user -f -u"
+alias jcuf="journalctl --user -f -u"
 
 # podman
 alias pm="podman"
