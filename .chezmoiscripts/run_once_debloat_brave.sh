@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 POLICY_DIR="/etc/brave/policies/managed"
 POLICY_FILE="$POLICY_DIR/brave_debloat.json"

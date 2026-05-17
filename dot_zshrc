@@ -1,3 +1,8 @@
+# Powerlevel10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # aliases
 alias vi=nvim
 alias vim=nvim
@@ -24,8 +29,8 @@ bindkey "^[[3~" delete-char
 # Rust
 . "$HOME/.cargo/env"
 
-# starship
-eval "$(starship init zsh)"
+# prompt
+source ~/.local/share/powerlevel10k/powerlevel10k.zsh-theme
 
 # Zsh settings
 autoload -Uz compinit && compinit
@@ -47,4 +52,7 @@ setopt hist_verify
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
