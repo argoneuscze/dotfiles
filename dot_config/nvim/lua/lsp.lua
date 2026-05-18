@@ -1,6 +1,7 @@
 -- Server configuration
-local tools = { 'rust-analyzer', 'prettierd' }
+local tools = { 'rust-analyzer', 'prettierd', 'shellcheck' }
 local servers = {
+  bashls = {},
   stylua = {},
   lua_ls = {
     on_init = function(client)
@@ -37,6 +38,7 @@ local servers = {
     on_attach = function(client, _) client.server_capabilities.hoverProvider = false end,
   },
   basedpyright = {
+    ---@type lspconfig.settings.basedpyright
     settings = {
       pyright = {
         -- Using Ruff's import organizer
@@ -54,6 +56,7 @@ local servers = {
 
 if vim.fn.executable 'go' == 1 then
   servers.gopls = {
+    ---@type lspconfig.settings.gopls
     settings = {
       gopls = {
         analyses = {
