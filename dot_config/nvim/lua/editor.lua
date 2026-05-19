@@ -86,3 +86,8 @@ require('oil').setup {
   },
 }
 vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open parent directory' })
+
+-- mini plugins
+vim.pack.add { U.gh 'nvim-mini/mini.nvim' }
+-- surround
+require('mini.surround').setup()
