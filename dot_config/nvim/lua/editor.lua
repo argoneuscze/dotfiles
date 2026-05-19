@@ -37,6 +37,9 @@ vim.pack.add { U.gh 'folke/todo-comments.nvim' }
 require('todo-comments').setup {}
 vim.keymap.set('n', '<leader>ft', '<cmd>TodoFzfLua<CR>', { desc = 'TODOs and notes' })
 
+-- surround
+vim.pack.add { U.gh 'kylechui/nvim-surround' }
+
 -- show keybinds
 vim.pack.add { U.gh 'folke/which-key.nvim' }
 require('which-key').setup {
@@ -86,8 +89,3 @@ require('oil').setup {
   },
 }
 vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open parent directory' })
-
--- mini plugins
-vim.pack.add { U.gh 'nvim-mini/mini.nvim' }
--- surround
-require('mini.surround').setup()
