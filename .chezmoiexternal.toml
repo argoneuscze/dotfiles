@@ -1,0 +1,6 @@
+[".local/share/powerlevel10k"]
+    type = "git-repo"
+    url = "https://github.com/romkatv/powerlevel10k.git"
+    exact = true
+    clone.args = ["--depth=1"]
+
