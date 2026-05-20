@@ -26,7 +26,8 @@ bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 bindkey "^[[3~" delete-char
 
-# fix path
+# default envvars
+export EDITOR=nvim
 export PATH="$HOME/.local/bin:$PATH"
 
 # prompt
@@ -34,8 +35,6 @@ source ~/.local/share/powerlevel10k/powerlevel10k.zsh-theme
 
 # Zsh settings
 autoload -Uz compinit && compinit
-
-setopt correct
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -47,6 +46,7 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
+setopt correct
 
 # init tools
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
