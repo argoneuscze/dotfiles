@@ -4,6 +4,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # aliases
+alias ll="ls -alF --color=auto"
 alias vi=nvim
 alias vim=nvim
 
