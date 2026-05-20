@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# hash: {{ glob ".local/share/fonts/**" | join "\n" | sha256sum }}
+fc-cache -f ~/.local/share/fonts
+

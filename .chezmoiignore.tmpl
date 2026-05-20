@@ -1,0 +1,10 @@
+{{ $os := lower (include "/etc/os-release") }}
+{{ if (or
+    (contains "steamos" $os)
+) }}
+.chezmoiscripts/run_once_debloat-brave.sh
+{{ end }}
+
+README.md
+
+

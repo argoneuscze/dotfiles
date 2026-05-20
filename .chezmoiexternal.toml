@@ -3,4 +3,13 @@
     url = "https://github.com/romkatv/powerlevel10k.git"
     exact = true
     clone.args = ["--depth=1"]
+[".local/share/fonts/HackNerd"]
+    type = "archive"
+    url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip"
+    exact = true
+[".local/share/icons/Bibata-Modern-Ice"]
+    type = "archive"
+    url = "https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Ice.tar.xz"
+    exact = true
+    stripComponents = 1
 
