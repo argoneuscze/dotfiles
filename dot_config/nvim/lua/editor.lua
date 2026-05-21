@@ -72,6 +72,23 @@ require('tiny-inline-diagnostic').setup {
   },
 }
 
+-- markdown viewer
+vim.pack.add { U.gh 'MeanderingProgrammer/render-markdown.nvim' }
+require('render-markdown').setup {
+  heading = {
+    backgrounds = { '', '', '', '', '', '' },
+  },
+}
+
+-- diffview
+vim.pack.add { U.gh 'sindrets/diffview.nvim' }
+vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<CR>', { desc = 'Open Diffview' })
+vim.keymap.set('n', '<leader>gx', '<cmd>DiffviewClose<CR>', { desc = 'Close Diffview' })
+
+-- neogit
+vim.pack.add { U.gh 'NeogitOrg/neogit' }
+vim.keymap.set('n', '<leader>gg', '<cmd>Neogit<CR>', { desc = 'Open Neogit' })
+
 -- oil
 function _G.get_oil_winbar()
   local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
