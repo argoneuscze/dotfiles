@@ -1,8 +1,7 @@
 -- Server configuration
-local tools = { 'rust-analyzer', 'prettierd', 'shellcheck' }
-local servers = {
-  bashls = {},
-  stylua = {},
+local tools = { 'shellcheck' }
+local servers = { 'stylua', 'lua_ls', 'rust-analyzer' }
+local server_config = {
   lua_ls = {
     on_init = function(client)
       client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
@@ -52,10 +51,7 @@ local servers = {
       },
     },
   },
-}
-
-if vim.fn.executable 'go' == 1 then
-  servers.gopls = {
+  gopls = {
     ---@type lspconfig.settings.gopls
     settings = {
       gopls = {
@@ -76,9 +72,18 @@ if vim.fn.executable 'go' == 1 then
         gofumpt = true,
       },
     },
-  }
+  },
+}
+
+if vim.fn.executable 'node' == 1 then
+  vim.list_extend(servers, { 'bashls' })
+  vim.list_extend(tools, { 'prettierd' })
+end
+if vim.fn.executable 'go' == 1 then
+  vim.list_extend(servers, { 'gopls' })
   vim.list_extend(tools, { 'goimports', 'gofumpt' })
 end
+if vim.fn.executable 'python' == 1 or vim.fn.executable 'python3' == 1 then vim.list_extend(servers, { 'basedpyright', 'ruff' }) end
 
 -- LSP hook
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -97,7 +102,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Highlight references under cursor
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client:supports_method('textDocument/documentHighlight', event.buf) then
-      local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+      local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = event.buf,
         group = highlight_augroup,
@@ -111,10 +116,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
 
       vim.api.nvim_create_autocmd('LspDetach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+        group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
         callback = function(event2)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+          vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
         end,
       })
     end
@@ -140,15 +145,23 @@ vim.pack.add {
 
 require('mason').setup {}
 
-local ensure_installed = vim.tbl_keys(servers or {})
+local ensure_installed = {}
+vim.list_extend(ensure_installed, servers)
 vim.list_extend(ensure_installed, tools)
 
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-for name, server in pairs(servers) do
+-- Configure specific servers
+for name, server in pairs(server_config) do
   vim.lsp.config(name, server)
-  vim.lsp.enable(name)
 end
+
+-- Automatically start all installed servers
+require('mason-lspconfig').setup {
+  automatic_enable = {
+    exclude = { 'rust_analyzer' },
+  },
+}
 
 -- Snippets
 vim.pack.add { U.gh 'rafamadriz/friendly-snippets' }
