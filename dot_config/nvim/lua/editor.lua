@@ -80,6 +80,16 @@ require('render-markdown').setup {
   },
 }
 
+-- nvim-tree
+vim.pack.add { U.gh 'nvim-tree/nvim-tree.lua' }
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+require('nvim-tree').setup {
+  view = { width = 40 },
+}
+vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle nvim-tree' })
+vim.keymap.set('n', '<leader>fe', '<cmd>NvimTreeFindFileToggle<CR>', { desc = 'Toggle nvim-tree at current file' })
+
 -- diffview
 vim.pack.add { U.gh 'sindrets/diffview.nvim' }
 vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<CR>', { desc = 'Open Diffview' })
