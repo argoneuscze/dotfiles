@@ -1,6 +1,8 @@
 -- Server configuration
 local tools = { 'shellcheck' }
-local servers = { 'stylua', 'lua_ls', 'rust-analyzer' }
+local servers = { 'stylua', 'lua_ls' }
+local autoenable_exclude = {}
+
 local server_config = {
   lua_ls = {
     on_init = function(client)
@@ -79,11 +81,24 @@ if vim.fn.executable 'node' == 1 then
   vim.list_extend(servers, { 'bashls' })
   vim.list_extend(tools, { 'prettierd' })
 end
+
 if vim.fn.executable 'go' == 1 then
   vim.list_extend(servers, { 'gopls' })
   vim.list_extend(tools, { 'goimports', 'gofumpt' })
 end
+
 if vim.fn.executable 'python' == 1 or vim.fn.executable 'python3' == 1 then vim.list_extend(servers, { 'basedpyright', 'ruff' }) end
+
+if vim.fn.executable 'cargo' == 1 then
+  vim.list_extend(servers, { 'rust-analyzer' })
+  vim.list_extend(autoenable_exclude, { 'rust_analyzer' })
+  vim.pack.add {
+    {
+      src = 'https://github.com/mrcjkb/rustaceanvim',
+      version = vim.version.range '^9',
+    },
+  }
+end
 
 -- LSP hook
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -159,7 +174,7 @@ end
 -- Automatically start all installed servers
 require('mason-lspconfig').setup {
   automatic_enable = {
-    exclude = { 'rust_analyzer' },
+    exclude = autoenable_exclude,
   },
 }
 
@@ -211,13 +226,5 @@ require('conform').setup {
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
     python = { 'ruff_organize_imports', 'ruff_format' },
     go = { 'goimports', 'gofumpt' },
-  },
-}
-
--- Rust
-vim.pack.add {
-  {
-    src = 'https://github.com/mrcjkb/rustaceanvim',
-    version = vim.version.range '^9',
   },
 }
