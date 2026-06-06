@@ -213,13 +213,11 @@ require('blink.cmp').setup {
 
 -- Formatting
 vim.pack.add { U.gh 'stevearc/conform.nvim' }
-require('conform').setup {
+local conform = require 'conform'
+conform.setup {
   notify_on_error = false,
-  format_on_save = {
-    timeout_ms = 1500,
-    lsp_format = 'fallback',
-  },
   default_format_opts = {
+    async = true,
     lsp_format = 'fallback',
   },
   formatters_by_ft = {
@@ -228,3 +226,4 @@ require('conform').setup {
     go = { 'goimports', 'gofumpt' },
   },
 }
+vim.keymap.set({ 'n', 'v' }, '<leader>cf', function() conform.format() end, { desc = 'Format code' })
