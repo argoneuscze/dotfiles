@@ -219,6 +219,7 @@ conform.setup {
   default_format_opts = {
     async = true,
     lsp_format = 'fallback',
+    timeout_ms = 3000,
   },
   formatters_by_ft = {
     javascript = { 'prettierd', 'prettier', stop_after_first = true },
