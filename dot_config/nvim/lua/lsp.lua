@@ -199,6 +199,20 @@ require('blink.cmp').setup {
     documentation = { auto_show = true, auto_show_delay_ms = 0 },
     trigger = { show_in_snippet = true },
     list = { selection = { preselect = false, auto_insert = false } },
+    menu = {
+      draw = {
+        columns = {
+          { 'kind_icon', 'kind', gap = 1 },
+          { 'label', 'label_description', gap = 1 },
+          { 'source_name' },
+        },
+        components = {
+          source_name = {
+            text = function(ctx) return '[' .. ctx.source_name .. ']' end,
+          },
+        },
+      },
+    },
   },
   signature = {
     enabled = true,
