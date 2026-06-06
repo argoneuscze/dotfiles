@@ -1,0 +1,56 @@
+" Core
+set nocompatible
+set encoding=utf-8
+syntax on
+filetype plugin indent on
+
+" Leader
+let mapleader = "\<Space>"
+let maplocalleader = "\<Space>"
+
+" General
+set number
+set mouse=a
+set confirm
+set scrolloff=10
+
+" Search
+set ignorecase
+set smartcase
+nnoremap <silent> <Esc> :nohlsearch<CR>
+
+" Tabs & Indent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set breakindent
+
+" Invisible characters
+set list
+set listchars=tab:»\ ,trail:·,nbsp:␣
+
+" Splits
+set splitright
+set splitbelow
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+
+nnoremap <C-S-h> <C-w>H
+nnoremap <C-S-l> <C-w>L
+nnoremap <C-S-j> <C-w>J
+nnoremap <C-S-k> <C-w>K
+
+" Disable arrows
+nnoremap <left> :echo "Use h to move left"<CR>
+nnoremap <right> :echo "Use l to move right"<CR>
+nnoremap <up> :echo "Use k to move up"<CR>
+nnoremap <down> :echo "Use j to move down"<CR>
+
+" Black hole register
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+
