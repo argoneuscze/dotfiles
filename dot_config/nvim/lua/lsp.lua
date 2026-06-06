@@ -202,8 +202,9 @@ require('blink.cmp').setup {
     menu = {
       draw = {
         columns = {
-          { 'kind_icon', 'kind', gap = 1 },
+          { 'kind_icon' },
           { 'label', 'label_description', gap = 1 },
+          { 'kind' },
           { 'source_name' },
         },
         components = {
