@@ -77,6 +77,14 @@
     (exec-path-from-shell-initialize)))
 
 ;; Editor
+(use-package treesit-auto
+  :after emacs
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode t))
+
 (use-package vundo)
 
 (use-package corfu
