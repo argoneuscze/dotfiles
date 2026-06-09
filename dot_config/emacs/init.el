@@ -18,9 +18,6 @@
   (setq doom-modeline-icon t))
 
 ;; Core
-(setq inhibit-x-resources t
-      inhibit-startup-screen t)
-
 (use-package emacs
   :custom
   (inhibit-x-resources t)
@@ -36,6 +33,7 @@
   (use-short-answers t)
   (ring-bell-function 'ignore)
   (tab-always-indent 'complete)
+  (indent-tabs-mode nil)
   (text-mode-ispell-word-completion nil)
   (read-extended-command-predicate #'command-completion-default-include-p)
   (enable-recursive-minibuffers t)
@@ -50,7 +48,6 @@
   (set-face-attribute 'default nil :font "Hack Nerd Font" :height 115)
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
-  (indent-tabs-mode nil)
   (global-display-line-numbers-mode t)
   (pixel-scroll-precision-mode t)
   (column-number-mode t)
@@ -58,6 +55,14 @@
   (save-place-mode t)
   (recentf-mode t)
   (which-key-mode t))
+
+(use-package eldoc
+  :custom
+  (eldoc-idle-delay 0)
+  (eldoc-documentation-strategy 'eldoc-documentation-compose)
+  (eldoc-echo-area-use-multiline-p t)
+  :init
+  (global-eldoc-mode))
 
 ;; Editor
 (use-package vundo
@@ -116,6 +121,77 @@
 ;; Git
 (use-package magit)
 
+;; LSP
+(use-package flymake
+  :hook
+  (prog-mode . flymake-mode))
+
+(use-package lsp-mode
+  :custom
+  (lsp-keymap-prefix "C-c l")
+  (lsp-enable-suggest-server-download nil)
+  :hook
+  ((lsp-mode . lsp-enable-which-key-integration)
+   (rust-ts-mode . lsp-deferred))
+  :commands lsp)
+
+(use-package lsp-pyright
+  :custom
+  (lsp-pyright-langserver-command "basedpyright")
+  :hook
+  (python-base-mode . (lambda ()
+			(require 'lsp-pyright)
+			(lsp-deferred))))
+
+;; General
+(use-package general
+  :config
+  (general-create-definer my-leader-def
+    :prefix "SPC")
+  (general-create-definer my-local-leader-def
+    :prefix ",")
+  (my-leader-def
+    :keymaps 'normal
+    ;; Quick access
+    ":" 'execute-extended-command
+    "." 'find-file
+    "SPC" 'project-find-file
+    "," 'consult-buffer
+    "/" 'consult-ripgrep
+    "-" 'dired-jump
+    ;; Find
+    "f" (cons "Find" (make-sparse-keymap))
+    "ff" 'find-file
+    "fs" 'save-buffer
+    "fr" 'consult-recent-file
+    ;; Search
+    "s" (cons "Search" (make-sparse-keymap))
+    "ss" 'consult-line
+    "sf" 'consult-find
+    "sg" 'consult-ripgrep
+    ;; Project
+    "p" (cons "Project" (make-sparse-keymap))
+    "pp" 'project-switch-project
+    "pf" 'project-find-file
+    ;; Buffer
+    "b" (cons "Buffer" (make-sparse-keymap))
+    "bb" 'consult-buffer
+    "bi" 'ibuffer
+    "bk" 'kill-current-buffer
+    ;; Dired
+    "d" (cons "Dired" (make-sparse-keymap))
+    "dd" 'dired
+    "dj" 'dired-jump
+    ;; Git
+    "g"  (cons "Git" (make-sparse-keymap))
+    "gg" 'magit-status
+    ;; Help
+    "h" (cons "Help" (make-sparse-keymap))
+    "hm" 'describe-mode
+    "hf" 'describe-function
+    "hv" 'describe-variable
+    "hk" 'describe-key))
+
 ;; Evil mode
 (use-package evil
   :custom
@@ -124,41 +200,7 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :config
-  (evil-mode 1)
-  (evil-set-leader '(normal visual) (kbd "SPC"))
-  (evil-set-leader '(normal visual) (kbd ",") t)
-  ;; Quick access
-  (evil-define-key 'normal 'global (kbd "<leader> :") 'execute-extended-command)
-  (evil-define-key 'normal 'global (kbd "<leader> .") 'find-file)
-  (evil-define-key 'normal 'global (kbd "<leader> SPC") 'project-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader> ,") 'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-ripgrep)
-  (evil-define-key 'normal 'global (kbd "<leader> -") 'dired-jump)
-  ;; Find
-  (evil-define-key 'normal 'global (kbd "<leader> f f") 'find-file)
-  (evil-define-key 'normal 'global (kbd "<leader> f s") 'save-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> f r") 'consult-recent-file)
-  ;; Search
-  (evil-define-key 'normal 'global (kbd "<leader> s s") 'consult-line)
-  (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
-  (evil-define-key 'normal 'global (kbd "<leader> s g") 'consult-ripgrep)
-  ;; Project
-  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project)
-  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file)
-  ;; Buffer
-  (evil-define-key 'normal 'global (kbd "<leader> b b") 'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b i") 'ibuffer)
-  (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer)
-  ;; Dired
-  (evil-define-key 'normal 'global (kbd "<leader> d d") 'dired)
-  (evil-define-key 'normal 'global (kbd "<leader> d j") 'dired-jump)
-  ;; Git
-  (evil-define-key 'normal 'global (kbd "<leader> g g") 'magit-status)
-  ;; Help
-  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode)
-  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function)
-  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable)
-  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key)) 
+  (evil-mode 1))
   
 (use-package evil-collection
   :after evil
