@@ -50,23 +50,31 @@
   (set-face-attribute 'default nil :font "Hack Nerd Font" :height 115)
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
-  (global-display-line-numbers-mode t)
   (pixel-scroll-precision-mode t)
   (column-number-mode t)
   (savehist-mode t)
   (save-place-mode t)
   (recentf-mode t)
-  (which-key-mode t))
+  (which-key-mode t)
+  :hook
+  (prog-mode . display-line-numbers-mode))
 
 (use-package eldoc
   :custom
-  (eldoc-idle-delay 0)
+  (eldoc-idle-delay 0.1)
   (eldoc-documentation-strategy 'eldoc-documentation-compose)
   (eldoc-echo-area-use-multiline-p 3)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-echo-area-display-truncation-message nil)
   :init
   (global-eldoc-mode))
+
+(use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-variables '("PATH" "MANPATH"))
+  :config
+  (when (or (daemonp) (display-graphic-p))
+    (exec-path-from-shell-initialize)))
 
 ;; Editor
 (use-package vundo)
@@ -75,14 +83,14 @@
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-delay 0.1)
+  (corfu-auto-delay 0.3)
   (corfu-auto-prefix 2)
   (corfu-preselect 'prompt)
   (corfu-preview-current nil)
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match t)
   (corfu-max-width 120)
-  (corfu-popupinfo-delay 0.2)
+  (corfu-popupinfo-delay 0.3)
   (corfu-popupinfo-max-width 120)
   (corfu-popupinfo-max-height 30)
   :bind
