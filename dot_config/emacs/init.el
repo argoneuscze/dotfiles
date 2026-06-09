@@ -65,26 +65,26 @@
   (global-eldoc-mode))
 
 ;; Editor
-(use-package vundo
-  :bind ("U" . vundo))
+(use-package vundo)
 
 (use-package corfu
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-delay 0.1)
+  (corfu-auto-delay 0.2)
   (corfu-auto-prefix 2)
   (corfu-preselect 'prompt)
-  (corfu-popupinfo-delay 0.1)
-  :init
-  (global-corfu-mode)
-  (corfu-popupinfo-mode)
+  (corfu-max-width 120)
+  (corfu-popupinfo-delay 0.2)
   :bind
   (:map corfu-map
-    ("TAB" . corfu-next)
-    ([tab] . corfu-next)
-    ("S-TAB" . corfu-previous)
-    ([backtab] . corfu-previous)))
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode)
+  (corfu-popupinfo-mode))
 
 (use-package nerd-icons-corfu
   :after corfu
@@ -150,8 +150,15 @@
     :prefix "SPC")
   (general-create-definer my-local-leader-def
     :prefix ",")
-  (my-leader-def
-    :keymaps 'normal
+  (general-def 'normal
+    "U" 'vundo)
+  (general-def 'normal prog-mode-map
+    "]d" 'flymake-goto-next-error
+    "[d" 'flymake-goto-prev-error
+    "K" 'lsp-describe-thing-at-point)
+  (general-def 'normal emacs-lisp-mode-map
+    "K" 'describe-symbol)
+  (my-leader-def 'normal
     ;; Quick access
     ":" 'execute-extended-command
     "." 'find-file
