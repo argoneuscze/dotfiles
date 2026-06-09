@@ -20,6 +20,8 @@
 ;; Core
 (use-package emacs
   :custom
+  (read-process-output-max (* 1024 1024))
+  (gc-cons-threshold (* 100 1024 1024))
   (inhibit-x-resources t)
   (inhibit-startup-screen t)
   (select-enable-clipboard t)
@@ -60,7 +62,9 @@
   :custom
   (eldoc-idle-delay 0)
   (eldoc-documentation-strategy 'eldoc-documentation-compose)
-  (eldoc-echo-area-use-multiline-p t)
+  (eldoc-echo-area-use-multiline-p 3)
+  (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-echo-area-display-truncation-message nil)
   :init
   (global-eldoc-mode))
 
@@ -71,17 +75,24 @@
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-delay 0.2)
+  (corfu-auto-delay 0.1)
   (corfu-auto-prefix 2)
   (corfu-preselect 'prompt)
+  (corfu-preview-current nil)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
   (corfu-max-width 120)
   (corfu-popupinfo-delay 0.2)
+  (corfu-popupinfo-max-width 120)
+  (corfu-popupinfo-max-height 30)
   :bind
   (:map corfu-map
         ("TAB" . corfu-next)
         ([tab] . corfu-next)
         ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
+        ([backtab] . corfu-previous)
+        ("C-f" . corfu-popupinfo-scroll-up)
+        ("C-b" . corfu-popupinfo-scroll-down))
   :init
   (global-corfu-mode)
   (corfu-popupinfo-mode))
@@ -126,14 +137,53 @@
   :hook
   (prog-mode . flymake-mode))
 
+(use-package yasnippet
+  :hook
+  (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package yasnippet-capf
+  :after cape
+  :config
+  (add-hook 'completion-at-point-functions #'yasnippet-capf))
+
 (use-package lsp-mode
   :custom
   (lsp-keymap-prefix "C-c l")
   (lsp-enable-suggest-server-download nil)
+  (lsp-completion-provider :none)
+  (lsp-diagnostics-provider :flymake)
+  (lsp-log-io nil)
+  (lsp-idle-delay 0.5)
+  (lsp-enable-folding nil)
+  (lsp-keep-workspace-alive nil)
+  (lsp-enable-snippet t)
+  (lsp-lens-enable t)
+  (lsp-eldoc-enable-hover t)
+  (lsp-eldoc-render-all nil)
+  (lsp-signature-render-documentation nil)
+  (lsp-headerline-breadcrumb-enable t)
   :hook
   ((lsp-mode . lsp-enable-which-key-integration)
+   (lsp-completion-mode . my/lsp-corfu-setup)
    (rust-ts-mode . lsp-deferred))
-  :commands lsp)
+  :commands lsp
+  :config
+  (defun my/lsp-corfu-setup ()
+    (setq-local completion-at-point-functions
+                (list (cape-capf-super
+                       #'lsp-completion-at-point
+                       #'yasnippet-capf)
+                      #'cape-file
+                      #'cape-dabbrev))))
+
+(use-package flymake-ruff
+  :hook
+  (python-mode-hook . flymake-ruff-load))
 
 (use-package lsp-pyright
   :custom
@@ -142,6 +192,52 @@
   (python-base-mode . (lambda ()
 			(require 'lsp-pyright)
 			(lsp-deferred))))
+
+;; Formatting
+(use-package apheleia
+  :preface
+  (defun my/format-buffer-smart ()
+    "Format buffer - Apheleia first, fallback to LSP."
+    (interactive)
+    (let ((has-apheleia
+           (and (bound-and-true-p apheleia-mode-alist)
+                (catch 'found
+                  (dolist (pair apheleia-mode-alist)
+                    (when (derived-mode-p (car pair))
+                      (throw 'found t)))
+                  nil)))
+          (lsp-can-format
+           (and (bound-and-true-p lsp-mode)
+                (fboundp 'lsp-feature?)
+                (lsp-feature? "textDocument/formatting"))))
+      (cond
+       (has-apheleia
+        (call-interactively #'apheleia-format-buffer)
+        (message "Formatted via Apheleia."))
+       (lsp-can-format
+        (lsp-format-buffer)
+        (message "Formatted via LSP."))
+       (t
+        (message "No formatter available.")))))
+  :config
+  (setq apheleia-mode-alist nil)
+  (setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) '(lisp-indent))
+  (setf (alist-get 'python-base-mode apheleia-mode-alist) '(ruff-isort ruff)))
+
+;; Evil mode
+(use-package evil
+  :custom
+  (evil-undo-system 'undo-redo)
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
 
 ;; General
 (use-package general
@@ -185,6 +281,13 @@
     "bb" 'consult-buffer
     "bi" 'ibuffer
     "bk" 'kill-current-buffer
+    ;; Code
+    "c" (cons "Code" (make-sparse-keymap))
+    "cx" 'consult-flymake
+    "cf" 'my/format-buffer-smart
+    ;; Toggle
+    "t" (cons "Toggle" (make-sparse-keymap))
+    "th" 'lsp-inlay-hints-mode
     ;; Dired
     "d" (cons "Dired" (make-sparse-keymap))
     "dd" 'dired
@@ -198,19 +301,4 @@
     "hf" 'describe-function
     "hv" 'describe-variable
     "hk" 'describe-key))
-
-;; Evil mode
-(use-package evil
-  :custom
-  (evil-undo-system 'undo-redo)
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1))
-  
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
 
