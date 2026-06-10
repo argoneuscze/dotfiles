@@ -18,6 +18,14 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
+;; Custom functions
+(defun my/eshell-other-window ()
+  "Opens Eshell in another window."
+  (interactive)
+  (split-window-sensibly)
+  (other-window 1)
+  (eshell))
+
 ;; UI
 (use-package dracula-theme
   :config
@@ -301,6 +309,7 @@
   (my-leader-def 'normal
     ;; Movement
     "w" (cons "Window" (make-sparse-keymap))
+    "ww" 'evil-window-next
     "wh" 'evil-window-left
     "wj" 'evil-window-down
     "wk" 'evil-window-up
@@ -318,7 +327,7 @@
     "-" 'dired-jump
     ;; Open
     "o" (cons "Open" (make-sparse-keymap))
-    "oe" 'eshell
+    "oe" 'my/eshell-other-window
     ;; Find
     "f" (cons "Find" (make-sparse-keymap))
     "ff" 'find-file
@@ -339,6 +348,7 @@
     "b" (cons "Buffer" (make-sparse-keymap))
     "bb" 'consult-buffer
     "bi" 'ibuffer
+    "bs" 'scratch-buffer
     "bk" 'kill-current-buffer
     ;; Code
     "c" (cons "Code" (make-sparse-keymap))
