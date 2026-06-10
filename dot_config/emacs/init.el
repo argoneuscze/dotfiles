@@ -1,7 +1,6 @@
 ;; Packages
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
@@ -85,7 +84,8 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode t))
 
-(use-package vundo)
+(use-package vundo
+  :commands vundo)
 
 (use-package corfu
   :custom
@@ -146,7 +146,8 @@
 	xref-show-definitions-function #'consult-xref))
 
 ;; Git
-(use-package magit)
+(use-package magit
+  :commands magit-status)
 
 ;; LSP
 (use-package flymake
@@ -187,7 +188,7 @@
   ((lsp-mode . lsp-enable-which-key-integration)
    (lsp-completion-mode . my/lsp-corfu-setup)
    (rust-ts-mode . lsp-deferred))
-  :commands lsp
+  :commands (lsp lsp-deferred)
   :config
   (defun my/lsp-corfu-setup ()
     (setq-local completion-at-point-functions
