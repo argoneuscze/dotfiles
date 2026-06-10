@@ -212,6 +212,9 @@
 
 ;; Formatting
 (use-package apheleia
+  :custom
+  (apheleia-mode-alist '((emacs-lisp-mode . (lisp-indent))
+                         (python-base-mode . (ruff-isort ruff))))
   :preface
   (defun my/format-buffer-smart ()
     "Format buffer - Apheleia first, fallback to LSP."
@@ -235,16 +238,14 @@
         (lsp-format-buffer)
         (message "Formatted via LSP."))
        (t
-        (message "No formatter available.")))))
-  :config
-  (setq apheleia-mode-alist nil)
-  (setf (alist-get 'emacs-lisp-mode apheleia-mode-alist) '(lisp-indent))
-  (setf (alist-get 'python-base-mode apheleia-mode-alist) '(ruff-isort ruff)))
+        (message "No formatter available."))))))
 
 ;; Evil mode
 (use-package evil
   :custom
   (evil-undo-system 'undo-redo)
+  (evil-vsplit-window-right t)
+  (evil-split-window-below t)
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -272,6 +273,16 @@
   (general-def 'normal emacs-lisp-mode-map
     "K" 'describe-symbol)
   (my-leader-def 'normal
+    ;; Movement
+    "w" (cons "Window" (make-sparse-keymap))
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right
+    "wv" 'evil-window-vsplit
+    "ws" 'evil-window-split
+    "wq" 'evil-window-delete
+    "wo" 'delete-other-windows
     ;; Quick access
     ":" 'execute-extended-command
     "." 'find-file
