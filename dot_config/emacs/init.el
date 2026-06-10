@@ -1,9 +1,22 @@
 ;; Packages
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(require 'use-package-ensure)
-(setq use-package-always-ensure t)
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
 ;; UI
 (use-package dracula-theme
@@ -69,6 +82,7 @@
   (global-eldoc-mode))
 
 (use-package exec-path-from-shell
+  :if (not (eq system-type 'windows-nt))
   :custom
   (exec-path-from-shell-variables '("PATH" "MANPATH"))
   :config
