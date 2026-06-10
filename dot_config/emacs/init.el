@@ -201,7 +201,12 @@
   :hook
   ((lsp-mode . lsp-enable-which-key-integration)
    (lsp-completion-mode . my/lsp-corfu-setup)
-   (rust-ts-mode . lsp-deferred))
+   (bash-ts-mode . lsp-deferred)
+   (rust-ts-mode . lsp-deferred)
+   (go-ts-mode . lsp-deferred)
+   (json-ts-mode . lsp-deferred)
+   (yaml-ts-mode . lsp-deferred)
+   (toml-ts-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :config
   (defun my/lsp-corfu-setup ()
@@ -224,11 +229,18 @@
 			(require 'lsp-pyright)
 			(lsp-deferred))))
 
+(use-package terraform-mode
+  :hook
+  (terraform-mode . lsp-deferred))
+
 ;; Formatting
 (use-package apheleia
   :custom
   (apheleia-mode-alist '((emacs-lisp-mode . (lisp-indent))
-                         (python-base-mode . (ruff-isort ruff))))
+                         (python-base-mode . (ruff-isort ruff))
+                         (go-ts-mode . (goimports gofumpt))
+                         (json-ts-mode . prettier-json)
+                         (yaml-ts-mode . prettier-yaml)))
   :preface
   (defun my/format-buffer-smart ()
     "Format buffer - Apheleia first, fallback to LSP."
