@@ -316,6 +316,9 @@
     "," 'consult-buffer
     "/" 'consult-ripgrep
     "-" 'dired-jump
+    ;; Open
+    "o" (cons "Open" (make-sparse-keymap))
+    "oe" 'eshell
     ;; Find
     "f" (cons "Find" (make-sparse-keymap))
     "ff" 'find-file
@@ -330,6 +333,8 @@
     "p" (cons "Project" (make-sparse-keymap))
     "pp" 'project-switch-project
     "pf" 'project-find-file
+    "pc" 'project-compile
+    "pk" 'project-kill-buffers
     ;; Buffer
     "b" (cons "Buffer" (make-sparse-keymap))
     "bb" 'consult-buffer
@@ -337,6 +342,8 @@
     "bk" 'kill-current-buffer
     ;; Code
     "c" (cons "Code" (make-sparse-keymap))
+    "ca" 'lsp-execute-code-action
+    "cr" 'lsp-rename
     "cx" 'consult-flymake
     "cf" 'my/format-buffer-smart
     ;; Toggle
