@@ -287,21 +287,22 @@
   (defun my/format-buffer-smart ()
     "Format buffer - Apheleia first, fallback to LSP."
     (interactive)
-    (let ((has-apheleia
+    (let ((apheleia-fmt
            (and (bound-and-true-p apheleia-mode-alist)
-                (catch 'found
-                  (dolist (pair apheleia-mode-alist)
-                    (when (derived-mode-p (car pair))
-                      (throw 'found t)))
-                  nil)))
+                (seq-some (lambda (pair)
+                            (when (derived-mode-p (car pair))
+                              (cdr pair)))
+                          apheleia-mode-alist)))
           (lsp-can-format
-           (and (bound-and-true-p lsp-mode)
+           (and (bound-and-true-p lsp-managed-mode)
                 (fboundp 'lsp-feature?)
                 (lsp-feature? "textDocument/formatting"))))
       (cond
-       (has-apheleia
-        (call-interactively #'apheleia-format-buffer)
-        (message "Formatted via Apheleia."))
+       (apheleia-fmt
+        (apheleia-format-buffer
+         apheleia-fmt
+         (lambda ()
+           (message "Formatted via Apheleia."))))
        (lsp-can-format
         (lsp-format-buffer)
         (message "Formatted via LSP."))
