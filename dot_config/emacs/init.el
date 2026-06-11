@@ -44,10 +44,12 @@
   (gc-cons-threshold (* 100 1024 1024))
   (inhibit-x-resources t)
   (inhibit-startup-screen t)
+  (nerd-icons-font-family "Hack Nerd Font")
   (select-enable-clipboard t)
   (auto-save-default nil)
   (create-lockfiles nil)
   (make-backup-files nil)
+  (tab-bar-show 1)
   (scroll-margin 10)
   (scroll-step 1)
   (scroll-conservatively 10000)
@@ -336,14 +338,23 @@
     ;; Search
     "s" (cons "Search" (make-sparse-keymap))
     "ss" 'consult-line
-    "sf" 'consult-find
+    "sf" 'consult-fd
     "sg" 'consult-ripgrep
+    ;; Workspace
+    "TAB" (cons "Workspace" (make-sparse-keymap))
+    "TAB n" 'tab-new
+    "TAB c" 'tab-close
+    "TAB r" 'tab-rename
+    "TAB TAB" 'tab-next
+    "TAB ]" 'tab-next
+    "TAB [" 'tab-previous
     ;; Project
     "p" (cons "Project" (make-sparse-keymap))
     "pp" 'project-switch-project
     "pf" 'project-find-file
     "pc" 'project-compile
     "pk" 'project-kill-buffers
+    "pt" 'project-other-tab-command
     ;; Buffer
     "b" (cons "Buffer" (make-sparse-keymap))
     "bb" 'consult-buffer
