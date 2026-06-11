@@ -190,6 +190,17 @@
   :hook
   (emacs-lisp-mode lisp-mode))
 
+;; Dired
+(use-package dired
+  :straight nil
+  :custom
+  (dired-dwim-target t)
+  (dired-kill-when-opening-new-dired-buffer t)
+  :config
+  (setq dired-listing-switches
+        (if (eq system-type 'gnu/linux)
+            "-agho --group-directories-first")))
+
 ;; Git
 (use-package magit
   :commands magit-status)
