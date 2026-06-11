@@ -203,7 +203,9 @@
 
 ;; Git
 (use-package magit
-  :commands magit-status)
+  :custom
+  (magit-format-file-function #'magit-format-file-nerd-icons)
+  :commands (magit-status magit-blame))
 
 ;; LSP
 (use-package flymake
