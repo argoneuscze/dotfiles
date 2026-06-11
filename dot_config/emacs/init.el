@@ -19,6 +19,21 @@
 (setq straight-use-package-by-default t)
 
 ;; Custom functions
+(defun my/kill-other-buffers ()
+  "Kill all buffers except the protected buffers and the current one."
+  (interactive)
+  (let ((protected '("*scratch*" "*Messages*"))
+        (current (current-buffer))
+        (killed-count 0))
+    (dolist (buf (buffer-list))
+      (let ((name (buffer-name buf)))
+        (unless (or (eq buf current)
+                    (string-prefix-p " " name)
+                    (member name protected))
+          (kill-buffer buf)
+          (setq killed-count (1+ killed-count))))
+      (message "Killed %d buffer(s)." killed-count))))
+
 (defun my/eshell-other-window ()
   "Opens Eshell in another window."
   (interactive)
@@ -74,7 +89,7 @@
   (load custom-file 'noerror 'nomessage)
   (pixel-scroll-precision-mode t)
   (column-number-mode t)
-  (winner-mode t)
+  (tab-bar-history-mode t)
   (savehist-mode t)
   (save-place-mode t)
   (recentf-mode t)
@@ -325,6 +340,7 @@
     "wv" 'evil-window-vsplit
     "ws" 'evil-window-split
     "wq" 'evil-window-delete
+    "wd" 'evil-window-delete
     "wo" 'delete-other-windows
     ;; Quick access
     ":" 'execute-extended-command
@@ -367,6 +383,7 @@
     "bi" 'ibuffer
     "bs" 'scratch-buffer
     "bk" 'kill-current-buffer
+    "bo" 'my/kill-other-buffers
     ;; Code
     "c" (cons "Code" (make-sparse-keymap))
     "ca" 'lsp-execute-code-action
@@ -389,4 +406,9 @@
     "hf" 'describe-function
     "hv" 'describe-variable
     "hk" 'describe-key))
+
+;; Load local configuration
+(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-exists-p local-file)
+    (load local-file)))
 
