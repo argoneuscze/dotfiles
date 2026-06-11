@@ -336,6 +336,7 @@
   (general-create-definer my-local-leader-def
     :prefix ",")
   (general-def 'normal
+    "<f5>" 'recompile
     "U" 'vundo)
   (general-def 'normal prog-mode-map
     "]d" 'flymake-goto-next-error
@@ -400,6 +401,7 @@
     "bo" 'my/kill-other-buffers
     ;; Code
     "c" (cons "Code" (make-sparse-keymap))
+    "cc" 'compile
     "ca" 'lsp-execute-code-action
     "cr" 'lsp-rename
     "cx" 'consult-flymake
