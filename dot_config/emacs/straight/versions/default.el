@@ -35,6 +35,7 @@
  ("nerd-icons.el" . "d33d12f5dcb6bf2fb23c3f75df5de85beb4afd95")
  ("nongnu-elpa" . "3253fbf43762ee4310b414aa45473898b814762f")
  ("orderless" . "09c90d93efce4fdac52edfe8b22591b773f3e607")
+ ("paredit" . "af075775af91f2dbc63b915d762b4aec092946c4")
  ("project" . "bd559402d1e98a4059cc159424e0f03d7ed7112f")
  ("s.el" . "7393fa6fa305403e628058c0ec78c35d610fab05")
  ("seq" . "da86da9bf111f68fb81efd466d76d53af5aebc00")

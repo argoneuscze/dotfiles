@@ -74,12 +74,14 @@
   (load custom-file 'noerror 'nomessage)
   (pixel-scroll-precision-mode t)
   (column-number-mode t)
+  (winner-mode t)
   (savehist-mode t)
   (save-place-mode t)
   (recentf-mode t)
   (which-key-mode t)
   :hook
-  (prog-mode . display-line-numbers-mode))
+  (prog-mode . display-line-numbers-mode)
+  (text-mode . display-line-numbers-mode))
 
 (use-package eldoc
   :custom
@@ -168,6 +170,10 @@
   (advice-add #'register-preview :override #'consult-register-window)
   (setq xref-show-xrefs-function #'consult-xref
 	xref-show-definitions-function #'consult-xref))
+
+(use-package paredit
+  :hook
+  (emacs-lisp-mode lisp-mode))
 
 ;; Git
 (use-package magit
