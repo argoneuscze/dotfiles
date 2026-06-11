@@ -188,6 +188,14 @@
   (setq xref-show-xrefs-function #'consult-xref
 	xref-show-definitions-function #'consult-xref))
 
+(use-package embark
+  :custom
+  (prefix-help-command #'embark-prefix-help-command)
+  :commands (embark-act embark-dwim embark-bindings))
+
+(use-package embark-consult
+  :after (embark consult))
+
 (use-package paredit
   :hook
   (emacs-lisp-mode lisp-mode))
@@ -338,8 +346,13 @@
     :prefix "SPC")
   (general-create-definer my-local-leader-def
     :prefix ",")
+  (general-def
+    "<f5>" 'recompile)
+  (general-def 'override
+    "C-." 'embark-act
+    "C-;" 'embark-dwim
+    "C-h B" 'embark-bindings)
   (general-def 'normal
-    "<f5>" 'recompile
     "U" 'vundo)
   (general-def 'normal prog-mode-map
     "]d" 'flymake-goto-next-error

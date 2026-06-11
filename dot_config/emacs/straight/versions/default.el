@@ -12,6 +12,7 @@
  ("eldoc" . "69030e0802f47b5fd32b559f2c92b7a8bf0ad2e3")
  ("emacs" . "f7ee0933b93a34a9f9cf6117293afef6c2464d9d")
  ("emacsmirror-mirror" . "d293479305d6ea9ca24ad7a0a85805845ad6b77c")
+ ("embark" . "350ca86924c5027e80875943fba7b912a71e5791")
  ("evil" . "3b678a221ee99cc6a95b01d7a3129ce5efc4c3da")
  ("evil-collection" . "bb82dba962ec22bbfa78027777be61bc353ec49d")
  ("exec-path-from-shell" . "58b33fefdcd90726c3ea7175b2abc68eccae46e1")
