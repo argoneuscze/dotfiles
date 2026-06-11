@@ -16,7 +16,6 @@
  ("evil-collection" . "bb82dba962ec22bbfa78027777be61bc353ec49d")
  ("exec-path-from-shell" . "58b33fefdcd90726c3ea7175b2abc68eccae46e1")
  ("f.el" . "931b6d0667fe03e7bf1c6c282d6d8d7006143c52")
- ("flymake" . "672e657179adb5da1fd2302cdbe14b07e05518eb")
  ("flymake-ruff" . "8f1602fa4ddf0abd3dfb8051cbd0259fc351d015")
  ("general.el" . "a48768f85a655fe77b5f45c2880b420da1b1b9c3")
  ("gnu-elpa-mirror" . "10bab9839ebbca51626874dc597e880b90c7dbf2")

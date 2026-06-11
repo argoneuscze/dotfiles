@@ -54,6 +54,7 @@
 
 ;; Core
 (use-package emacs
+  :straight nil
   :custom
   (read-process-output-max (* 1024 1024))
   (gc-cons-threshold (* 100 1024 1024))
@@ -99,6 +100,7 @@
   (text-mode . display-line-numbers-mode))
 
 (use-package eldoc
+  :straight nil
   :custom
   (eldoc-idle-delay 0.1)
   (eldoc-documentation-strategy 'eldoc-documentation-compose)
@@ -209,6 +211,7 @@
 
 ;; LSP
 (use-package flymake
+  :straight nil
   :hook
   (prog-mode . flymake-mode))
 
