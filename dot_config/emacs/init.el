@@ -47,10 +47,11 @@
   (load-theme 'dracula t))
 
 (use-package doom-modeline
+  :custom
+  (doom-modeline-icon t)
+  (doom-modeline-vcs-max-length 40)
   :init
-  (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-icon t))
+  (doom-modeline-mode 1))
 
 ;; Core
 (use-package emacs
