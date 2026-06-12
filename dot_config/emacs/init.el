@@ -197,6 +197,7 @@
   :after (embark consult))
 
 (use-package paredit
+  :straight (paredit :type git :host github :repo "emacsmirror/paredit")
   :hook
   (emacs-lisp-mode lisp-mode))
 
