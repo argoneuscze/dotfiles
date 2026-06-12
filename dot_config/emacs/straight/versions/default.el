@@ -1,4 +1,5 @@
-(("annalist.el" . "f83019d61b82a64e621d8dfd63a527a578ff0a11")
+(("Emacs-wgrep" . "49f09ab9b706d2312cab1199e1eeb1bcd3f27f6f")
+ ("annalist.el" . "f83019d61b82a64e621d8dfd63a527a578ff0a11")
  ("apheleia" . "cfa0bd48cb71fbf3c729aced2f78115728e5ca95")
  ("bind-key" . "6ff8788e347ce31b5c3c4647c2e22e7ee2c5ab7c")
  ("cape" . "c99911b08831c26179145686b4beffa96f1f8a68")

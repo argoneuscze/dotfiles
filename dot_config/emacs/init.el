@@ -90,6 +90,7 @@
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
   (pixel-scroll-precision-mode t)
+  (global-auto-revert-mode t)
   (column-number-mode t)
   (tab-bar-history-mode t)
   (savehist-mode t)
@@ -196,6 +197,9 @@
 
 (use-package embark-consult
   :after (embark consult))
+
+(use-package wgrep
+  :commands wgrep-change-to-wgrep-mode)
 
 (use-package paredit
   :straight (paredit :type git :host github :repo "emacsmirror/paredit")
@@ -418,6 +422,7 @@
     ;; Buffer
     "b" (cons "Buffer" (make-sparse-keymap))
     "bb" 'consult-buffer
+    "br" 'revert-buffer-quick
     "bi" 'ibuffer
     "bs" 'scratch-buffer
     "bk" 'kill-current-buffer
