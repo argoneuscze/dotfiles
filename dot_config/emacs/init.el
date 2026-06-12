@@ -208,9 +208,14 @@
   (dired-dwim-target t)
   (dired-kill-when-opening-new-dired-buffer t)
   :config
-  (setq dired-listing-switches
-        (if (eq system-type 'gnu/linux)
-            "-agho --group-directories-first")))
+  (cond
+   ((eq system-type 'gnu/linux)
+    (setq dired-listing-switches "-alh --group-directories-first"))
+   ((eq system-type 'windows-nt)
+    (require 'ls-lisp)
+    (setq ls-lisp-use-insert-directory-program nil
+          ls-lisp-dirs-first t
+          ls-lisp-ignore-case t))))
 
 ;; Git
 (use-package magit
