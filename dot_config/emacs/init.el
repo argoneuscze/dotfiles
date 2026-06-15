@@ -353,6 +353,7 @@
 ;; General
 (use-package general
   :config
+  (general-unbind :states 'normal :keymaps 'dired-mode-map "SPC")
   (general-create-definer my-leader-def
     :prefix "SPC")
   (general-create-definer my-local-leader-def
@@ -403,7 +404,9 @@
     "s" (cons "Search" (make-sparse-keymap))
     "ss" 'consult-line
     "sf" 'consult-fd
+    "sF" 'consult-find
     "sg" 'consult-ripgrep
+    "sG" 'consult-grep
     ;; Workspace
     "TAB" (cons "Workspace" (make-sparse-keymap))
     "TAB n" 'tab-new
@@ -419,6 +422,11 @@
     "pc" 'project-compile
     "pk" 'project-kill-buffers
     "pt" 'project-other-tab-command
+    ;; Bookmarks
+    "m" (cons "Bookmark" (make-sparse-keymap))
+    "ms" 'bookmark-set
+    "md" 'bookmark-delete
+    "mf" 'consult-bookmark
     ;; Buffer
     "b" (cons "Buffer" (make-sparse-keymap))
     "bb" 'consult-buffer
