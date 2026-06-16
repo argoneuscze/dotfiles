@@ -41,6 +41,150 @@
   (other-window 1)
   (eshell))
 
+;; Evil mode
+(use-package evil
+  :demand t
+  :custom
+  (evil-undo-system 'undo-redo)
+  (evil-vsplit-window-right t)
+  (evil-split-window-below t)
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :demand t
+  :config
+  (evil-collection-init))
+
+;; General
+(use-package general
+  :demand t
+  :config
+  (general-create-definer my/leader-def
+    :states '(normal visual)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+  (general-unbind :states 'normal "gi")
+  (general-def
+    "<f5>" 'recompile)
+  (general-def :keymaps 'override
+    "C-." 'embark-act
+    "C-;" 'embark-dwim
+    "C-h B" 'embark-bindings)
+  (general-def :states 'normal
+    "U" 'vundo
+    "gr" 'xref-find-references
+    "gd" 'xref-find-definitions)
+  (general-def :states 'normal :keymaps 'flymake-mode-map
+    "]d" 'flymake-goto-next-error
+    "[d" 'flymake-goto-prev-error)
+  (general-def :states 'normal :keymaps 'lsp-mode-map
+    "K" 'lsp-describe-thing-at-point
+    "gi" 'lsp-find-implementation
+    "gy" 'lsp-find-type-definition)
+  (general-def :states 'normal :keymaps 'emacs-lisp-mode-map
+    "K" 'describe-symbol)
+  (my/leader-def
+    ;; Movement
+    "w" (cons "Window" (make-sparse-keymap))
+    "ww" 'evil-window-next
+    "wh" 'evil-window-left
+    "wj" 'evil-window-down
+    "wk" 'evil-window-up
+    "wl" 'evil-window-right
+    "wv" 'evil-window-vsplit
+    "ws" 'evil-window-split
+    "wq" 'evil-window-delete
+    "wd" 'evil-window-delete
+    "wo" 'delete-other-windows
+    ;; Quick access
+    ":" 'execute-extended-command
+    "." 'find-file
+    "SPC" 'project-find-file
+    "," 'consult-buffer
+    "/" 'consult-ripgrep
+    "-" 'dired-jump
+    ;; Open
+    "o" (cons "Open" (make-sparse-keymap))
+    "oe" 'my/eshell-other-window
+    ;; Find
+    "f" (cons "Find" (make-sparse-keymap))
+    "ff" 'find-file
+    "fs" 'save-buffer
+    "fr" 'consult-recent-file
+    ;; Search
+    "s" (cons "Search" (make-sparse-keymap))
+    "ss" 'consult-line
+    "sf" 'consult-fd
+    "sF" 'consult-find
+    "sg" 'consult-ripgrep
+    "sG" 'consult-grep
+    ;; Workspace
+    "TAB" (cons "Workspace" (make-sparse-keymap))
+    "TAB n" 'tab-new
+    "TAB c" 'tab-close
+    "TAB r" 'tab-rename
+    "TAB TAB" 'tab-next
+    "TAB ]" 'tab-next
+    "TAB [" 'tab-previous
+    ;; Project
+    "p" (cons "Project" (make-sparse-keymap))
+    "pp" 'project-switch-project
+    "pf" 'project-find-file
+    "pc" 'project-compile
+    "pk" 'project-kill-buffers
+    "pt" 'project-other-tab-command
+    ;; Bookmarks
+    "m" (cons "Bookmark" (make-sparse-keymap))
+    "ms" 'bookmark-set
+    "md" 'bookmark-delete
+    "mf" 'consult-bookmark
+    ;; Buffer
+    "b" (cons "Buffer" (make-sparse-keymap))
+    "bb" 'consult-buffer
+    "br" 'revert-buffer-quick
+    "bi" 'ibuffer
+    "bs" 'scratch-buffer
+    "bk" 'kill-current-buffer
+    "bo" 'my/kill-other-buffers
+    ;; Code
+    "c" (cons "Code" (make-sparse-keymap))
+    "cc" 'compile
+    "cx" 'consult-flymake
+    "cf" 'my/format-buffer-smart
+    ;; Toggle
+    "t" (cons "Toggle" (make-sparse-keymap))
+    ;; Dired
+    "d" (cons "Dired" (make-sparse-keymap))
+    "dd" 'dired
+    "dj" 'dired-jump
+    ;; Git
+    "g"  (cons "Git" (make-sparse-keymap))
+    "gg" 'magit-status
+    ;; Help
+    "h" (cons "Help" (make-sparse-keymap))
+    "hm" 'describe-mode
+    "hf" 'describe-function
+    "hv" 'describe-variable
+    "hk" 'describe-key)
+  (my/leader-def :keymaps 'lsp-mode-map
+    ;; Code
+    "ca" 'lsp-execute-code-action
+    "cr" 'lsp-rename
+    "cd" 'consult-lsp-diagnostics
+    "cs" 'consult-lsp-symbols
+    "cS" 'consult-lsp-file-symbols
+    ;; Toggle
+    "th" 'lsp-inlay-hints-mode
+    ;; LSP
+    "l" (cons "LSP" (make-sparse-keymap))
+    "li" 'lsp-describe-session
+    "lr" 'lsp-workspace-restart))
+
 ;; UI
 (use-package dracula-theme
   :config
@@ -235,7 +379,9 @@
     (require 'ls-lisp)
     (setq ls-lisp-use-insert-directory-program nil
           ls-lisp-dirs-first t
-          ls-lisp-ignore-case t))))
+          ls-lisp-ignore-case t)))
+  :general
+  (general-unbind :states 'normal :keymaps 'dired-mode-map "SPC"))
 
 ;; Git
 (use-package magit
@@ -265,22 +411,27 @@
 
 (use-package lsp-mode
   :custom
+  ;; Core
   (lsp-keymap-prefix "C-c l")
   (lsp-enable-suggest-server-download nil)
-  (lsp-completion-provider :none)
-  (lsp-diagnostics-provider :flymake)
+  (lsp-keep-workspace-alive nil)
   (lsp-log-io nil)
   (lsp-idle-delay 0.5)
-  (lsp-enable-folding nil)
-  (lsp-keep-workspace-alive nil)
+  ;; Completion
+  (lsp-completion-provider :none)
+  (lsp-diagnostics-provider :flymake)
   (lsp-enable-snippet t)
+  ;; UI
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-enable-folding nil)
   (lsp-lens-enable t)
+  ;; Documentation
   (lsp-eldoc-enable-hover t)
   (lsp-eldoc-render-all nil)
   (lsp-signature-render-documentation nil)
-  (lsp-headerline-breadcrumb-enable t)
   :hook
   ((lsp-mode . lsp-enable-which-key-integration)
+   (lsp-mode . evil-normalize-keymaps)
    (lsp-completion-mode . my/lsp-corfu-setup)
    (bash-ts-mode . lsp-deferred)
    (rust-ts-mode . lsp-deferred)
@@ -347,146 +498,6 @@
         (message "Formatted via LSP."))
        (t
         (message "No formatter available."))))))
-
-;; Evil mode
-(use-package evil
-  :custom
-  (evil-undo-system 'undo-redo)
-  (evil-vsplit-window-right t)
-  (evil-split-window-below t)
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1))
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-;; General
-(use-package general
-  :config
-  (general-unbind :states 'normal :keymaps 'dired-mode-map "SPC")
-  (general-unbind :states 'normal "gi")
-  (general-def
-    "<f5>" 'recompile)
-  (general-def 'override
-    "C-." 'embark-act
-    "C-;" 'embark-dwim
-    "C-h B" 'embark-bindings)
-  (general-def 'normal
-    "U" 'vundo
-    "gr" 'xref-find-references
-    "gd" 'xref-find-definitions)
-  (general-def 'normal flymake-mode-map
-    "]d" 'flymake-goto-next-error
-    "[d" 'flymake-goto-prev-error)
-  (general-def 'normal lsp-mode-map
-    "K" 'lsp-describe-thing-at-point
-    "gi" 'lsp-find-implementation
-    "gy" 'lsp-find-type-definition)
-  (general-def 'normal emacs-lisp-mode-map
-    "K" 'describe-symbol)
-  (general-def 'normal
-    :prefix "SPC"
-    ;; Movement
-    "w" (cons "Window" (make-sparse-keymap))
-    "ww" 'evil-window-next
-    "wh" 'evil-window-left
-    "wj" 'evil-window-down
-    "wk" 'evil-window-up
-    "wl" 'evil-window-right
-    "wv" 'evil-window-vsplit
-    "ws" 'evil-window-split
-    "wq" 'evil-window-delete
-    "wd" 'evil-window-delete
-    "wo" 'delete-other-windows
-    ;; Quick access
-    ":" 'execute-extended-command
-    "." 'find-file
-    "SPC" 'project-find-file
-    "," 'consult-buffer
-    "/" 'consult-ripgrep
-    "-" 'dired-jump
-    ;; Open
-    "o" (cons "Open" (make-sparse-keymap))
-    "oe" 'my/eshell-other-window
-    ;; Find
-    "f" (cons "Find" (make-sparse-keymap))
-    "ff" 'find-file
-    "fs" 'save-buffer
-    "fr" 'consult-recent-file
-    ;; Search
-    "s" (cons "Search" (make-sparse-keymap))
-    "ss" 'consult-line
-    "sf" 'consult-fd
-    "sF" 'consult-find
-    "sg" 'consult-ripgrep
-    "sG" 'consult-grep
-    ;; Workspace
-    "TAB" (cons "Workspace" (make-sparse-keymap))
-    "TAB n" 'tab-new
-    "TAB c" 'tab-close
-    "TAB r" 'tab-rename
-    "TAB TAB" 'tab-next
-    "TAB ]" 'tab-next
-    "TAB [" 'tab-previous
-    ;; Project
-    "p" (cons "Project" (make-sparse-keymap))
-    "pp" 'project-switch-project
-    "pf" 'project-find-file
-    "pc" 'project-compile
-    "pk" 'project-kill-buffers
-    "pt" 'project-other-tab-command
-    ;; Bookmarks
-    "m" (cons "Bookmark" (make-sparse-keymap))
-    "ms" 'bookmark-set
-    "md" 'bookmark-delete
-    "mf" 'consult-bookmark
-    ;; Buffer
-    "b" (cons "Buffer" (make-sparse-keymap))
-    "bb" 'consult-buffer
-    "br" 'revert-buffer-quick
-    "bi" 'ibuffer
-    "bs" 'scratch-buffer
-    "bk" 'kill-current-buffer
-    "bo" 'my/kill-other-buffers
-    ;; Code
-    "c" (cons "Code" (make-sparse-keymap))
-    "cc" 'compile
-    "cx" 'consult-flymake
-    "cf" 'my/format-buffer-smart
-    ;; Toggle
-    "t" (cons "Toggle" (make-sparse-keymap))
-    ;; Dired
-    "d" (cons "Dired" (make-sparse-keymap))
-    "dd" 'dired
-    "dj" 'dired-jump
-    ;; Git
-    "g"  (cons "Git" (make-sparse-keymap))
-    "gg" 'magit-status
-    ;; Help
-    "h" (cons "Help" (make-sparse-keymap))
-    "hm" 'describe-mode
-    "hf" 'describe-function
-    "hv" 'describe-variable
-    "hk" 'describe-key)
-  (general-def 'normal lsp-mode-map
-    :prefix "SPC"
-    ;; Code
-    "ca" 'lsp-execute-code-action
-    "cr" 'lsp-rename
-    "cd" 'consult-lsp-diagnostics
-    "cs" 'consult-lsp-symbols
-    "cS" 'consult-lsp-file-symbols
-    ;; Toggle
-    "th" 'lsp-inlay-hints-mode
-    ;; LSP
-    "l" (cons "LSP" (make-sparse-keymap))
-    "li" 'lsp-describe-session
-    "lr" 'lsp-workspace-restart))
 
 ;; Load local configuration
 (let ((local-file (expand-file-name "local.el" user-emacs-directory)))
