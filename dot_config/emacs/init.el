@@ -57,47 +57,58 @@
 (use-package emacs
   :straight nil
   :custom
+  ;; System
   (read-process-output-max (* 1024 1024))
   (gc-cons-threshold (* 100 1024 1024))
-  (inhibit-x-resources t)
-  (inhibit-startup-screen t)
-  (nerd-icons-font-family "Hack Nerd Font")
   (select-enable-clipboard t)
+  ;; Backups
   (auto-save-default nil)
   (create-lockfiles nil)
   (make-backup-files nil)
-  (tab-bar-show 1)
-  (scroll-margin 10)
-  (scroll-step 1)
-  (scroll-conservatively 10000)
-  (pixel-scroll-precision-use-momentum nil)
-  (xref-prompt-for-identifier nil)
-  (use-short-answers t)
+  ;; UI
+  (inhibit-startup-screen t)
+  (inhibit-x-resources t)
   (ring-bell-function 'ignore)
-  (tab-always-indent 'complete)
-  (indent-tabs-mode nil)
-  (text-mode-ispell-word-completion nil)
+  (tab-bar-show 1)
+  (use-short-answers t)
+  (nerd-icons-font-family "Hack Nerd Font Mono")
+  ;; Minibuffer
   (read-extended-command-predicate #'command-completion-default-include-p)
   (enable-recursive-minibuffers t)
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
+  ;; Scrolling
+  (scroll-margin 10)
+  (scroll-step 1)
+  (scroll-conservatively 10000)
+  (pixel-scroll-precision-use-momentum nil)
+  ;; Editor
+  (xref-prompt-for-identifier nil)
+  (tab-always-indent 'complete)
+  (indent-tabs-mode nil)
+  (text-mode-ispell-word-completion nil)
   :init
+  ;; UI
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   :config
+  ;; Appearance
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  (set-face-attribute 'default nil :font "Hack Nerd Font" :height 115)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono" :height 115)
+  ;; Separate custom file
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
+  ;; UI
   (pixel-scroll-precision-mode t)
-  (global-auto-revert-mode t)
   (column-number-mode t)
+  (which-key-mode t)
+  ;; State
   (tab-bar-history-mode t)
   (savehist-mode t)
   (save-place-mode t)
   (recentf-mode t)
-  (which-key-mode t)
+  (global-auto-revert-mode t)
   :hook
   (prog-mode . display-line-numbers-mode)
   (text-mode . display-line-numbers-mode))
@@ -359,10 +370,6 @@
   :config
   (general-unbind :states 'normal :keymaps 'dired-mode-map "SPC")
   (general-unbind :states 'normal "gi")
-  (general-create-definer my-leader-def
-    :prefix "SPC")
-  (general-create-definer my-local-leader-def
-    :prefix ",")
   (general-def
     "<f5>" 'recompile)
   (general-def 'override
@@ -382,7 +389,8 @@
     "gy" 'lsp-find-type-definition)
   (general-def 'normal emacs-lisp-mode-map
     "K" 'describe-symbol)
-  (my-leader-def 'normal
+  (general-def 'normal
+    :prefix "SPC"
     ;; Movement
     "w" (cons "Window" (make-sparse-keymap))
     "ww" 'evil-window-next
@@ -448,20 +456,10 @@
     ;; Code
     "c" (cons "Code" (make-sparse-keymap))
     "cc" 'compile
-    "ca" 'lsp-execute-code-action
-    "cr" 'lsp-rename
-    "cd" 'consult-lsp-diagnostics
-    "cs" 'consult-lsp-symbols
-    "cS" 'consult-lsp-file-symbols
     "cx" 'consult-flymake
     "cf" 'my/format-buffer-smart
-    ;; LSP
-    "l" (cons "LSP" (make-sparse-keymap))
-    "li" 'lsp-describe-session
-    "lr" 'lsp-workspace-restart
     ;; Toggle
     "t" (cons "Toggle" (make-sparse-keymap))
-    "th" 'lsp-inlay-hints-mode
     ;; Dired
     "d" (cons "Dired" (make-sparse-keymap))
     "dd" 'dired
@@ -474,7 +472,21 @@
     "hm" 'describe-mode
     "hf" 'describe-function
     "hv" 'describe-variable
-    "hk" 'describe-key))
+    "hk" 'describe-key)
+  (general-def 'normal lsp-mode-map
+    :prefix "SPC"
+    ;; Code
+    "ca" 'lsp-execute-code-action
+    "cr" 'lsp-rename
+    "cd" 'consult-lsp-diagnostics
+    "cs" 'consult-lsp-symbols
+    "cS" 'consult-lsp-file-symbols
+    ;; Toggle
+    "th" 'lsp-inlay-hints-mode
+    ;; LSP
+    "l" (cons "LSP" (make-sparse-keymap))
+    "li" 'lsp-describe-session
+    "lr" 'lsp-workspace-restart))
 
 ;; Load local configuration
 (let ((local-file (expand-file-name "local.el" user-emacs-directory)))
