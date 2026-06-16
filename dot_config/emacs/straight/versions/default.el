@@ -6,6 +6,7 @@
  ("compat" . "ac70b4d347fe22bcd0228c763bf804673086a621")
  ("cond-let" . "21b9e9835756ff5cd1acb971cf9eb56fff671c8b")
  ("consult" . "540ad1e59ef80b1c8dd712cbbaae8957533ad02c")
+ ("consult-lsp" . "d11102c9db33c4ca7817296a2edafc3e26a61117")
  ("corfu" . "4a9c67da16eb64cadaa4bfcc16713188145c83da")
  ("dash.el" . "d3a84021dbe48dba63b52ef7665651e0cf02e915")
  ("doom-modeline" . "ef31532e26c97cae48d45351f463bdcabca33225")

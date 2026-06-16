@@ -71,6 +71,7 @@
   (scroll-step 1)
   (scroll-conservatively 10000)
   (pixel-scroll-precision-use-momentum nil)
+  (xref-prompt-for-identifier nil)
   (use-short-answers t)
   (ring-bell-function 'ignore)
   (tab-always-indent 'complete)
@@ -189,6 +190,9 @@
   (advice-add #'register-preview :override #'consult-register-window)
   (setq xref-show-xrefs-function #'consult-xref
 	xref-show-definitions-function #'consult-xref))
+
+(use-package consult-lsp
+  :after lsp-mode)
 
 (use-package embark
   :custom
@@ -354,6 +358,7 @@
 (use-package general
   :config
   (general-unbind :states 'normal :keymaps 'dired-mode-map "SPC")
+  (general-unbind :states 'normal "gi")
   (general-create-definer my-leader-def
     :prefix "SPC")
   (general-create-definer my-local-leader-def
@@ -365,11 +370,16 @@
     "C-;" 'embark-dwim
     "C-h B" 'embark-bindings)
   (general-def 'normal
-    "U" 'vundo)
-  (general-def 'normal prog-mode-map
+    "U" 'vundo
+    "gr" 'xref-find-references
+    "gd" 'xref-find-definitions)
+  (general-def 'normal flymake-mode-map
     "]d" 'flymake-goto-next-error
-    "[d" 'flymake-goto-prev-error
-    "K" 'lsp-describe-thing-at-point)
+    "[d" 'flymake-goto-prev-error)
+  (general-def 'normal lsp-mode-map
+    "K" 'lsp-describe-thing-at-point
+    "gi" 'lsp-find-implementation
+    "gy" 'lsp-find-type-definition)
   (general-def 'normal emacs-lisp-mode-map
     "K" 'describe-symbol)
   (my-leader-def 'normal
@@ -440,8 +450,15 @@
     "cc" 'compile
     "ca" 'lsp-execute-code-action
     "cr" 'lsp-rename
+    "cd" 'consult-lsp-diagnostics
+    "cs" 'consult-lsp-symbols
+    "cS" 'consult-lsp-file-symbols
     "cx" 'consult-flymake
     "cf" 'my/format-buffer-smart
+    ;; LSP
+    "l" (cons "LSP" (make-sparse-keymap))
+    "li" 'lsp-describe-session
+    "lr" 'lsp-workspace-restart
     ;; Toggle
     "t" (cons "Toggle" (make-sparse-keymap))
     "th" 'lsp-inlay-hints-mode
