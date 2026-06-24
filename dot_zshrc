@@ -5,8 +5,6 @@ fi
 
 # aliases
 alias ll="ls -alF --color=auto"
-alias vi=nvim
-alias vim=nvim
 
 # systemd
 alias sc="systemctl"
