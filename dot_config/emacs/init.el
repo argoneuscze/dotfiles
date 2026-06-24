@@ -239,7 +239,7 @@
   :config
   ;; Appearance
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono" :height 115)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono" :height 145)
   ;; Separate custom file
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
