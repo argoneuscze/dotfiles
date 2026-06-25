@@ -246,7 +246,6 @@
   ;; UI
   (pixel-scroll-precision-mode t)
   (column-number-mode t)
-  (which-key-mode t)
   ;; State
   (tab-bar-history-mode t)
   (savehist-mode t)
@@ -267,6 +266,15 @@
   (eldoc-echo-area-display-truncation-message nil)
   :init
   (global-eldoc-mode))
+
+(straight-use-package
+ (if (< emacs-major-version 30)
+     'which-key
+   '(which-key :type built-in)))
+(use-package which-key
+  :straight nil
+  :config
+  (which-key-mode t))
 
 (use-package exec-path-from-shell
   :if (not (eq system-type 'windows-nt))
